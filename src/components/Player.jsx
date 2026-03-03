@@ -1,21 +1,27 @@
 import { useState } from "react"
 
-function Player({ name, symbol }) {
+function Player({ initialName, symbol }) {
+    const [name, setName] = useState(initialName);
     const [isEditing, setIsEditing] = useState(false);
 
     function handleEditClick() {
         setIsEditing(editing => !editing);  //don't pass dorectly !isEditing - can cause problems because of React scheduling, this way editing always gets updated/latest state value - callback()
     }
 
-    const playerName = isEditing ?
-        <input type="text" value={name} />
+    function handleChange(event) {
+        console.log(event);
+        setName(event.target.value);
+    }
+
+    const editablePlayerName = isEditing ?
+        <input type="text" required value={name} onChange={(event) => handleChange(event)} />   //we get event obj automatically from onChange
         : <span className="player-name">{name}</span>;
 
     const btnText = !isEditing ? 'Edit' : 'Save';
     return (
         <li>
             <span className="player">
-                {playerName}
+                {editablePlayerName}
                 <span className="player-symbol">{symbol}</span>
             </span>
             <button onClick={handleEditClick}>{btnText}</button>
