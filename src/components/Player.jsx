@@ -14,7 +14,10 @@ function Player({ initialName, symbol }) {
     }
 
     const editablePlayerName = isEditing ?
-        <input type="text" required value={name} onChange={(event) => handleChange(event)} />   //we get event obj automatically from onChange
+        <input type="text" required value={name} 
+        onChange={(event) => handleChange(event)}   //we get event obj automatically from onChange
+        // onClick={() => setName('')}
+        />   
         : <span className="player-name">{name}</span>;
 
     const btnText = !isEditing ? 'Edit' : 'Save';
