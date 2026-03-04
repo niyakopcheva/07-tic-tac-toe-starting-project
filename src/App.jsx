@@ -5,7 +5,12 @@ import Log from "./components/Log";
 import { WINNING_COMBINATIONS } from "./winning-combinations";
 import GameOver from "./components/GameOver";
 
-const initialGameBoard = [
+const PLAYERS = {
+  X: 'Player 1',
+  O: 'Player 2'
+};
+
+const INITIAL_GAME_BOARD = [
   [null, null, null],
   [null, null, null],
   [null, null, null],
@@ -19,26 +24,7 @@ function deriveActivePlayer(gameTurns) {
   return currentPlayer;
 }
 
-function App() {
-  // const [activePlayer, setActivePlayer] = useState('X');
-  const [gameTurns, setGameTurns] = useState([]); //for logging
-  const [players, setPlayers] = useState({
-    X: 'Player 1',
-    O: 'Player 2'
-  });
-
-  const activePlayer = deriveActivePlayer(gameTurns);
-
-  //get updated gameboard
-  let gameBoard = [...initialGameBoard.map(arr => [...arr])]; //deep copy
-
-  for (const turn of gameTurns) {
-    const { square, player } = turn;
-    const { row, col } = square;
-
-    gameBoard[row][col] = player;
-  }
-
+function deriveWinner(gameBoard, players) {
   let winner = null;
   for (const combo of WINNING_COMBINATIONS) {
     const firstSquareSymbol = gameBoard[combo[0].row][combo[0].column];
@@ -50,6 +36,33 @@ function App() {
       winner = players[firstSquareSymbol];
     }
   }
+
+  return winner;
+}
+
+function deriveGameBoard(gameTurns) {
+  let gameBoard = [...INITIAL_GAME_BOARD.map(arr => [...arr])]; //deep copy
+
+  for (const turn of gameTurns) {
+    const { square, player } = turn;
+    const { row, col } = square;
+
+    gameBoard[row][col] = player;
+  }
+
+  return gameBoard;
+}
+
+function App() {
+  // const [activePlayer, setActivePlayer] = useState('X');
+  const [gameTurns, setGameTurns] = useState([]); //for logging
+  const [players, setPlayers] = useState(PLAYERS);
+
+  const activePlayer = deriveActivePlayer(gameTurns);
+
+  //get updated gameboard
+  const gameBoard = deriveGameBoard(gameTurns);
+  const winner = deriveWinner(gameBoard, players);
 
   //draw logic - no winner, 9 turns
   const hasDraw = gameTurns.length === 9 && !winner;
@@ -87,13 +100,13 @@ function App() {
       <div id="game-container">
         <ol id="players" className="highlight-player">
           <Player
-            initialName='Player1'
+            initialName={PLAYERS.X}
             symbol='X'
             isActive={activePlayer === 'X'}
             onChangeName={handlePlayerChange}
           />
           <Player
-            initialName='Player2'
+            initialName={PLAYERS.O}
             symbol='O'
             isActive={activePlayer === 'O'}
             onChangeName={handlePlayerChange}
