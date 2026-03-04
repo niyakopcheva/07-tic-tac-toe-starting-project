@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-function Player({ initialName, symbol }) {
+function Player({ initialName, symbol, isActive }) {
     const [name, setName] = useState(initialName);
     const [isEditing, setIsEditing] = useState(false);
 
@@ -14,15 +14,15 @@ function Player({ initialName, symbol }) {
     }
 
     const editablePlayerName = isEditing ?
-        <input type="text" required value={name} 
-        onChange={(event) => handleChange(event)}   //we get event obj automatically from onChange
+        <input type="text" required value={name}
+            onChange={(event) => handleChange(event)}   //we get event obj automatically from onChange
         // onClick={() => setName('')}
-        />   
+        />
         : <span className="player-name">{name}</span>;
 
     const btnText = !isEditing ? 'Edit' : 'Save';
     return (
-        <li>
+        <li className={isActive ? 'active' : undefined}>
             <span className="player">
                 {editablePlayerName}
                 <span className="player-symbol">{symbol}</span>
