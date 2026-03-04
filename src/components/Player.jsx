@@ -1,11 +1,14 @@
 import { useState } from "react"
 
-function Player({ initialName, symbol, isActive }) {
+function Player({ initialName, symbol, isActive, onChangeName }) {
     const [name, setName] = useState(initialName);
     const [isEditing, setIsEditing] = useState(false);
 
     function handleEditClick() {
         setIsEditing(editing => !editing);  //don't pass dorectly !isEditing - can cause problems because of React scheduling, this way editing always gets updated/latest state value - callback()
+
+        if (isEditing)
+            onChangeName(symbol, name);
     }
 
     function handleChange(event) {
